@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xonacatlán - Tierra del Peluche</title>
+    <style>
+        /* Estilos Generales */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Botón circular con volumen (Efecto 3D) */
+        .btn-bloquear {
+            position: fixed;
+            top: 115px; 
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1cc62a 0%, #13A81F 50%, #0e7d17 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 4px 0 #09520e, 0 6px 12px rgba(0,0,0,0.35);
+            transition: all 0.1s ease;
+        }
+        .btn-bloquear:hover {
+            background: linear-gradient(135deg, #22d531 0%, #17bc24 50%, #108c1a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #09520e, 0 8px 16px rgba(0,0,0,0.4);
+        }
+        .btn-bloquear:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #09520e, 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-bloquear svg {
+            display: block;
+        }
+
+        /* Barra superior negra para enlaces */
+        .wiki-bar {
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 12px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .wiki-bar a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+        .wiki-bar a:hover {
+            color: #13A81F;
+        }
+
+        /* Menú de Navegación Fijo */
+        nav {
+            background-color: #2c3e50;
+            position: fixed;
+            top: 45px;
+            left: 0;
+            width: 100%;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+        nav a {
+            color: white;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        nav a:hover {
+            background-color: #13A81F;
+        }
+
+        /* Portada / Lobby */
+        header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Un_poco_de_Xonacatl%C3%A1n_01.jpg/1280px-Un_poco_de_Xonacatl%C3%A1n_01.jpg') no-repeat center center/cover;
+            height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+        header .header-content {
+            margin-top: 80px;
+        }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        header p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        .btn-explorar {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #13A81F;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-explorar:hover {
+            background-color: #0e7d17;
+            transform: scale(1.05);
+        }
+
+        /* Secciones de Contenido */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 40px 20px;
+        }
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid #e1e8ed;
+            scroll-margin-top: 110px;
+        }
+        .section-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        .section-content.reverse {
+            flex-direction: row-reverse;
+        }
+        .text-side {
+            flex: 1;
+        }
+        .text-side h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .text-side h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #13A81F;
+            margin-top: 8px;
+        }
+        .img-side {
+            flex: 1;
+        }
+        .img-side img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        /* Enlace de Video */
+        .video-link {
+            display: inline-block;
+            background-color: #2980b9;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .video-link:hover {
+            background-color: #1f618d;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            nav { position: static; top: 0; }
+            .wiki-bar { position: static; }
+            .container { padding-top: 20px; }
+            .section-content, .section-content.reverse {
+                flex-direction: column;
+            }
+            header h1 { font-size: 2.5rem; }
+            nav { flex-wrap: wrap; }
+            nav a { padding: 10px; font-size: 0.85rem; }
+            .btn-bloquear { top: 20px; left: 15px; width: 42px; height: 42px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BLOQUEO DE PANTALLA POR PIN -->
+    <div id="bloqueo-pantalla" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        color: white;
+        font-family: sans-serif;
+    ">
+        <div style="background: #34495e; padding: 2rem; border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            <h2 style="margin-top: 0; color: #fff;">Acceso Restringido</h2>
+            <p style="margin-bottom: 10px;">Introduce la contraseña para ingresar:</p>
+            <input type="password" id="pin-input" maxlength="4" placeholder="••••" style="
+                font-size: 2rem;
+                text-align: center;
+                width: 120px;
+                padding: 5px;
+                border: none;
+                border-radius: 4px;
+                margin-bottom: 1rem;
+                letter-spacing: 5px;
+            ">
+            <br>
+            <button onclick="verificarContrasena()" style="
+                background-color: #13A81F;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 1rem;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            ">Ingresar</button>
+            <p id="mensaje-error" style="color: #e74c3c; margin-top: 1rem; font-weight: bold; display: none;">Contraseña incorrecta. Intenta de nuevo.</p>
+        </div>
+    </div>
+
+    <!-- BOTÓN DE REGRESO CON VOLUMEN E ICONO CENTRADO -->
+    <button class="btn-bloquear" onclick="regresarABloqueo()" title="Regresar a pantalla de bloqueo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </button>
+
+    <!-- ENLACES EN LA PORTADA -->
+    <div class="wiki-bar">
+        <a href="https://es.wikipedia.org/wiki/Xonacatl%C3%A1n" target="_blank">Wikipedia: Xonacatlán</a>
+        <a href="https://www.google.com/maps/place/52060+Xonacatl%C3%A1n,+M%C3%A9x./@19.4101491,-99.5234406,15z/data=!3m1!4b1!4m6!3m5!1s0x85d20b5e3ab26fbf:0x43b299baf19adb7e!8m2!3d19.4042181!4d-99.5302705!16s%2Fm%2F064l630?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" target="_blank">Maps: Xonacatlán</a>
+        <a href="https://www.xonacatlan.gob.mx/" target="_blank">Alcaldía de Xonacatlán</a>
+    </div>
+
+    <!-- MENÚ DE NAVEGACIÓN FIJO -->
+    <nav>
+        <a href="#que-es">¿Qué es?</a>
+        <a href="#ubicacion">Ubicación</a>
+        <a href="#tradiciones">Tradiciones</a>
+        <a href="#destaque">Lo que destaca</a>
+        <a href="#turismo">Zonas Turísticas</a>
+        <a href="#importancia">¿Por qué importa?</a>
+    </nav>
+
+    <!-- LOBBY / BIENVENIDA -->
+    <header id="inicio">
+        <div class="header-content">
+            <h1>Bienvenidos a Xonacatlán</h1>
+            <p>Tierra de calidez, cultura otomí y magia hecha peluche</p>
+            <a href="#que-es" class="btn-explorar">Comenzar Recorrido</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. ¿QUÉ ES? -->
+        <section id="que-es">
+            <div class="section-content">
+                <div class="text-side">
+                    <h2>¿Qué es Xonacatlán?</h2>
+                    <p>Xonacatlán es uno de los 125 municipios que conforman el Estado de México. Su nombre proviene del náhuatl y significa <strong>"Entre las cebollas"</strong>. Es un lugar fascinante que combina una herencia prehispánica de profundas raíces otomíes con un crecimiento urbano y comercial vibrante, famoso en todo el país por el ingenio de su gente.</p>
+                </div>
+                <div class="img-side">
+                    <!-- Imagen 1: Entrada original de Xonacatlán (Corregida) -->
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Un_poco_de_Xonacatl%C3%A1n_01.jpg/1280px-Un_poco_de_Xonacatl%C3%A1n_01.jpg" alt="Entrada y letras de Xonacatlán">
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. UBICACIÓN -->
+        <section id="ubicacion">
+            <div class="section-content reverse">
+                <div class="text-side">
+                    <h2>Ubicación</h2>
+                    <p>Se localiza en la zona norte del Valle de Toluca, en las faldas del Monte de las Cruces. Limita de forma directa con los municipios de Otzolotepec, Jilotzingo, Lerma y Naucalpan. Su ubicación es sumamente estratégica y accesible, ya que se encuentra a tan solo 15 kilómetros de Toluca y a aproximadamente 40 kilómetros de la Ciudad de México.</p>
+                </div>
+                <div class="img-side">
+                    <!-- Imagen 2: Vista urbana del centro de Xonacatlán (Corregida) -->
+                    <img src="001.jpg" alt="Entorno urbano y calles de Xonacatlán">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. TRADICIONES -->
+        <section id="tradiciones">
+            <div class="section-content">
+                <div class="text-side">
+                    <h2>Tradiciones y Fiestas</h2>
+                    <p>La vida comunitaria se llena de color con sus fiestas patronales, destacando la celebración en honor a <strong>San Francisco de Asís</strong> cada 4 de octubre en la cabecera municipal. Además, se preservan coloridos carnavales en Santa María Zolotepec y las danzas tradicionales como las Pastoras, los Arrieros y los Güitos.</p>
+                </div>
+                <div class="img-side">
+                    <img src="002.jpg" alt="Parroquia de San Francisco de Asís en Xonacatlán">
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. COSAS QUE LOS DESTACAN -->
+        <section id="destaque">
+            <div class="section-content reverse">
+                <div class="text-side">
+                    <h2>Lo que los destaca: ¡La Capital del Peluche!</h2>
+                    <p>Si algo le ha dado fama internacional a Xonacatlán es su apodo como la <strong>"Ciudad del Peluche"</strong>. Cerca del 30% de la población se dedica a la fabricación de estos muñecos en cientos de talleres locales. Su creatividad es tan grande que el municipio ostenta un Récord Guinness oficial por haber confeccionado a "Xonita", la osa de peluche más grande de todo el planeta.</p>
+                </div>
+                <div class="img-side">
+                    <img src="000.jpg" alt="Osa Xonita en Xonacatlán">
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ZONAS TURÍSTICAS -->
+        <section id="turismo">
+            <div class="section-content">
+                <div class="text-side">
+                    <h2>Zonas Turísticas y Naturaleza</h2>
+                    <p>Para quienes buscan aventura y contacto con la naturaleza, el municipio ofrece el bellísimo <strong>Parque Ecoturístico La Vega</strong>, un espacio ideal para acampar, pasear junto a un río natural, deslizarse por tirolesas o practicar gotcha. Asimismo, los senderistas disfrutan de espectaculares rutas boscosas en el Cerro del Jeshadi.</p>
+                </div>
+                <div class="img-side">
+                    <img src="https://static.wixstatic.com/media/531f91_7fe544fda18e4d0da6623cac045f578f.jpg/v1/fill/w_411,h_408,al_c,q_80,enc_avif,quality_auto/531f91_7fe544fda18e4d0da6623cac045f578f.jpg" alt="Paisaje boscoso real de Xonacatlán">
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. POR QUÉ ES IMPORTANTE -->
+        <section id="importancia">
+            <div class="section-content reverse">
+                <div class="text-side">
+                    <h2>¿Por qué es importante?</h2>
+                    <p>Xonacatlán es una pieza clave en el motor económico y cultural del Estado de México. Económicamente, abastece de muñecos de peluche y textiles de lana de alta calidad a múltiples mercados nacionales. Culturalmente, actúa como un guardián de la memoria viva y de los caminos de la etnia indígena otomí.</p>
+                </div>
+                <div class="img-side">
+                    <img src="003.jpg" alt="Centro urbano de Xonacatlán">
+                </div>
+            </div>  
+        </section>
+
+        <!-- SECCIÓN COMPLEMENTARIA DEL VIDEO -->
+        <section style="text-align: center;">
+            <h2>Aprende más sobre este tema</h2>
+            <p style="margin-bottom: 20px;">Xonacatlán el mundo del peluche</p>
+            <a href="https://youtu.be/Y_gg6CBXlno?si=OyjPJKJKOgLBOkS0" target="_blank" class="video-link">
+                ▶ Ver Video de Xonacatlán
+            </a>
+        </section>
+
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p>&copy; 2026 Xonacatlán, Estado de México.</p>
+    </footer>
+
+    <!-- SCRIPT DE CONTROL PARA EL PIN -->
+    <script>
+        function verificarContrasena() {
+            var pinIngresado = document.getElementById("pin-input").value;
+            var pinCorrecto = "4185"; 
+
+            if (pinIngresado === pinCorrecto) {
+                document.getElementById("bloqueo-pantalla").style.display = "none";
+            } else {
+                var errorTxt = document.getElementById("mensaje-error");
+                errorTxt.style.display = "block";
+                document.getElementById("pin-input").value = "";
+                document.getElementById("pin-input").focus();
+            }
+        }
+
+        function regresarABloqueo() {
+            document.getElementById("mensaje-error").style.display = "none";
+            document.getElementById("pin-input").value = "";
+            document.getElementById("bloqueo-pantalla").style.display = "flex";
+        }
+
+        document.getElementById("pin-input").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                verificarContrasena();
+            }
+        });
+    </script>
+
+</body>
+</html>
